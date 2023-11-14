@@ -28,6 +28,13 @@ void AMirrorForceBulletBase::OnOverlap(UPrimitiveComponent* OverlappedComponent,
 
 		UMirrorAttributeSet* MirrorAttributeSetNonConst = const_cast<UMirrorAttributeSet*>(MirrorAttributeSet);
 		MirrorAttributeSetNonConst->SetHealth(MirrorAttributeSet->GetHealth() - 10);
+
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit"));
+		}
+		
+		Destroy();
 	}
 }
 
