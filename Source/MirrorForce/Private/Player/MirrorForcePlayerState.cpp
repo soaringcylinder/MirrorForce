@@ -3,14 +3,13 @@
 
 #include "Player/MirrorForcePlayerState.h"
 #include "AbilitySystemComponent.h"
-#include "AttributeSet.h"
+#include "AbilitySystem/MirrorAttributeSet.h"
 
 
 AMirrorForcePlayerState::AMirrorForcePlayerState()
 {
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
-	AttributeSet = CreateDefaultSubobject<UAttributeSet>(TEXT("AttributeSet"));
-	
+	AttributeSet = CreateDefaultSubobject<UMirrorAttributeSet>(TEXT("AttributeSet"));
 }
 
 UAbilitySystemComponent* AMirrorForcePlayerState::GetAbilitySystemComponent() const
