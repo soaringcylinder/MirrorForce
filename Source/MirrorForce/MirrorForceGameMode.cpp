@@ -1,8 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "MirrorForceGameMode.h"
-#include "MirrorForcePlayerController.h"
-#include "MirrorForceCharacter.h"
+#include "Player/MirrorForcePlayerController.h"
 #include "UObject/ConstructorHelpers.h"
 
 AMirrorForceGameMode::AMirrorForceGameMode()

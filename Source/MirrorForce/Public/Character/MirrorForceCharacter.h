@@ -4,10 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "AbilitySystemInterface.h"
+#include "Character/MirrorForceCharacterBase.h"
 #include "MirrorForceCharacter.generated.h"
 
+class UAbilitySystemComponent;
+class UAttributeSet;
+
 UCLASS(Blueprintable)
-class AMirrorForceCharacter : public ACharacter
+class AMirrorForceCharacter : public AMirrorForceCharacterBase
 {
 	GENERATED_BODY()
 
@@ -16,6 +21,8 @@ public:
 
 	// Called every frame.
 	virtual void Tick(float DeltaSeconds) override;
+	
+	virtual void PossessedBy(AController* NewController) override;
 
 	/** Returns TopDownCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }
@@ -25,10 +32,12 @@ public:
 private:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* TopDownCameraComponent;
+	TObjectPtr<UCameraComponent> TopDownCameraComponent;
 
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+	TObjectPtr<USpringArmComponent> CameraBoom;
+	
+	void InitAbilityActorInfo();
 };
 

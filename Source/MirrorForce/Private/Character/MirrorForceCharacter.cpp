@@ -1,8 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "MirrorForceCharacter.h"
-
-#include "EnhancedInputSubsystems.h"
+#include "Character/MirrorForceCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -11,6 +9,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Materials/Material.h"
 #include "Engine/World.h"
+#include "AbilitySystemComponent.h"
+#include "Player/MirrorForcePlayerState.h"
 
 AMirrorForceCharacter::AMirrorForceCharacter()
 {
@@ -49,13 +49,28 @@ AMirrorForceCharacter::AMirrorForceCharacter()
 	TopDownCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
 	TopDownCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCameraComponent->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-
-	// Activate ticking in order to update the cursor every frame.
+	
 	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.bStartWithTickEnabled = true;
 }
+
 
 void AMirrorForceCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+}
+
+void AMirrorForceCharacter::InitAbilityActorInfo()
+{
+	AMirrorForcePlayerState* MirrorForcePlayerState = GetPlayerState<AMirrorForcePlayerState>();
+	check(MirrorForcePlayerState);
+	AbilitySystemComponent = MirrorForcePlayerState->GetAbilitySystemComponent();
+	AbilitySystemComponent->InitAbilityActorInfo(MirrorForcePlayerState, this);
+	AttributeSet = MirrorForcePlayerState->GetAttributeSet();
+}
+
+void AMirrorForceCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	InitAbilityActorInfo();
 }
