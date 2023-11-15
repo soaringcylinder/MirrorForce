@@ -27,7 +27,7 @@ void AMirrorForceBulletBase::OnOverlap(UPrimitiveComponent* OverlappedComponent,
 			ASCInterface->GetAbilitySystemComponent()->GetAttributeSet(UMirrorAttributeSet::StaticClass()));
 
 		UMirrorAttributeSet* MirrorAttributeSetNonConst = const_cast<UMirrorAttributeSet*>(MirrorAttributeSet);
-		MirrorAttributeSetNonConst->SetHealth(MirrorAttributeSet->GetHealth() - 10);
+		MirrorAttributeSetNonConst->SetHealth(MirrorAttributeSet->GetHealth() - 1);
 
 		if (GEngine)
 		{

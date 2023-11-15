@@ -11,6 +11,7 @@
 #include "Engine/World.h"
 #include "AbilitySystemComponent.h"
 #include "Player/MirrorForcePlayerState.h"
+#include "UI/HUD/MirrorForceHUD.h"
 
 AMirrorForceCharacter::AMirrorForceCharacter()
 {
@@ -66,6 +67,14 @@ void AMirrorForceCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent = MirrorForcePlayerState->GetAbilitySystemComponent();
 	AbilitySystemComponent->InitAbilityActorInfo(MirrorForcePlayerState, this);
 	AttributeSet = MirrorForcePlayerState->GetAttributeSet();
+
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()) )
+	{
+		if ( AMirrorForceHUD* MirrorForceHUD = Cast<AMirrorForceHUD>(PlayerController->GetHUD()) )
+		{
+			MirrorForceHUD->InitOverlay(PlayerController, MirrorForcePlayerState, AbilitySystemComponent, AttributeSet);
+		}
+	}
 }
 
 void AMirrorForceCharacter::PossessedBy(AController* NewController)
