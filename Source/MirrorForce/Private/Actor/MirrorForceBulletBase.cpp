@@ -2,6 +2,7 @@
 
 #include "Actor/MirrorForceBulletBase.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
 #include "AbilitySystem/MirrorAttributeSet.h"
@@ -11,45 +12,27 @@
 AMirrorForceBulletBase::AMirrorForceBulletBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
-	SetRootComponent(Mesh);
 	
-	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
-	Sphere->SetupAttachment(GetRootComponent());
+	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
 }
 
-void AMirrorForceBulletBase::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	if (const IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(OtherActor))
-	{
-		const UMirrorAttributeSet* MirrorAttributeSet = Cast<UMirrorAttributeSet>(
-			ASCInterface->GetAbilitySystemComponent()->GetAttributeSet(UMirrorAttributeSet::StaticClass()));
-
-		UMirrorAttributeSet* MirrorAttributeSetNonConst = const_cast<UMirrorAttributeSet*>(MirrorAttributeSet);
-		MirrorAttributeSetNonConst->SetHealth(MirrorAttributeSet->GetHealth() - 1);
-
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit"));
-		}
-		
-		Destroy();
-	}
-}
-
-void AMirrorForceBulletBase::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-}
-
-// Called when the game starts or when spawned
 void AMirrorForceBulletBase::BeginPlay()
 {
 	Super::BeginPlay();
+}
 
-	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AMirrorForceBulletBase::OnOverlap);
-	Sphere->OnComponentEndOverlap.AddDynamic(this, &AMirrorForceBulletBase::EndOverlap);
+void AMirrorForceBulletBase::ApplyEffectToTargetActor(AActor* TargetActor,
+	TSubclassOf<UGameplayEffect> GameplayEffectClass)
+{
+	if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor))
+	{
+		check(GameplayEffectClass);
+
+		FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
+		EffectContextHandle.AddSourceObject(this);
+		const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1.0f, EffectContextHandle);
+		TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+	}
 }
 
 
