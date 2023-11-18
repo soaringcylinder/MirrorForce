@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/MirrorAttributeSet.h"
 #include "UI/WidgetController/MirrorForceWidgetController.h"
 #include "OverlayWidgetController.generated.h"
 
