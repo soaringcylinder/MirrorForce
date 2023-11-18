@@ -2,6 +2,7 @@
 
 
 #include "UI/WidgetController/OverlayWidgetController.h"
+#include "AbilitySystem/MirrorAttributeSet.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {
