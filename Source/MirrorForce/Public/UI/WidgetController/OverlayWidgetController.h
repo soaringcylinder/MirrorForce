@@ -28,9 +28,4 @@ public:
 	virtual void BroadcastInitialValues() override;
 
 	virtual void BindCallbacksToDependencies() override;
-
-protected:
-	void HealthChangedCallback(const FOnAttributeChangeData& Data) const;
-	void MaxHealthChangedCallback(const FOnAttributeChangeData& Data) const;
-	
 };
