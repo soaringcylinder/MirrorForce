@@ -8,9 +8,9 @@ UMirrorAttributeSet::UMirrorAttributeSet()
 	InitMaxHealth(3.0f);
 }
 
-void UMirrorAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+void UMirrorAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
 {
-	Super::PreAttributeChange(Attribute, NewValue);
+	Super::PostAttributeChange(Attribute, OldValue, NewValue);
 
 	if (Attribute == GetHealthAttribute())
 	{
@@ -21,5 +21,3 @@ void UMirrorAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 		NewValue = FMath::Max<float>(NewValue, 0.f);
 	}
 }
-
-
